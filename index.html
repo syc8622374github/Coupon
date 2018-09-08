@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>忆奇学同步课优惠券</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="format-detection" content="telephone=no,email=no"/>
+		<link rel="stylesheet" href="css/app.css">
+		<style>
+			.content-bg-icon{
+				padding: 1rem;
+				background-origin: border-box;
+				background-repeat: no-repeat;
+			}
+			.radius-item{
+				border: 1px solid #fff;
+				padding: 15px 0;
+				border-radius: 2rem;
+			}
+			.content-item{
+				margin: 0 auto;
+				width: 20rem;
+				display: block;
+			}
+			#content-next-btn{
+				margin: 1rem auto;
+			}
+			.content-phone-inp01{
+				outline: none;
+				text-align: center;
+				background: #F5F5F5;
+				border: 1px solid #D2D2D2;
+			}
+			.content-check-code-inp01{
+				outline: none;
+				text-align: center;
+				background: #F5F5F5;
+				width: 13rem;
+				border: 1px solid #D2D2D2;
+				padding: 1.1rem 0;
+			}
+			.check-code-btn01{
+				outline: none;
+				text-align: center;
+				width: 6.5rem;
+				background: #FFFFFF;
+				border: 1px solid #12D8AD;
+				color: #24C791;
+			}
+			.content-check-code-item01{
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="header">
+			<div class="header-title">忆奇学同步课优惠券</div>
+		</header>
+		<div class="content">
+			<img class="content-bg-icon content-item" src="img/bg_img.png"></img>
+			<input class="radius-item content-item content-phone-inp01" type="number" id="content-phone-inp" placeholder="请输入电话号码"/>
+			<div class="content-check-code-item01 content-item" id="content-check-code-item">
+				<input class="radius-item content-check-code-inp01" type="number" id="content-check-code-inp" placeholder="请输入验证码"/>
+				<button class="radius-item check-code-btn01 content-send-code-btn"  id="content-send-code-btn">发送验证码</button>
+			</div>
+			<button class="radius-item content-item content-next-btn01"  id="content-next-btn">下一步</button>
+		</div>
+	</body>
+	<script src="js/zepto_v1.2.0.js"></script>
+	<script>
+		var type_status = "1";
+		var is_send_msg = false;
+		Zepto(function($){
+			init_page();
+		})
+		
+		function updateCheckCodeView(){
+			$("#content-send-code-btn").text("60s").attr("disabled","false")
+		}
+		
+		function updateView(){
+			var content_next_btn_obj = $("#content-next-btn");
+			//console.log(content_next_btn_obj.prop("disabled"))
+			if(!content_next_btn_obj.prop("disabled")){
+				content_next_btn_obj.unbind("touchstart").bind("touchstart",function(event){
+					$("#content-next-btn").removeClass("content-next-btn01").addClass("content-next-btn02");
+				}).unbind("touchend").bind("touchend",function(event){
+					$("#content-next-btn").removeClass("content-next-btn02").addClass("content-next-btn01");
+				}).unbind("click").bind('click',function(e){
+					if(type_status=="1"){
+						if($("#content-phone-inp").val()){
+							type_status = "2";
+							init_page()
+						}else{
+							alert("请输入电话号码")
+						}
+					}else if(type_status=="2"){
+						if($("#content-check-code-inp").val()){
+							window.location.href = "collect-coupon.html";
+						}else{
+							alert("请输入验证码")
+						}
+					}
+				})
+			}else{
+				$("#content-next-btn").unbind("touchstart").unbind("touchend").unbind("click")
+			}
+		}
+		
+		function update_login_view(){
+			console.log("1"+!$("#content-check-code-inp").val()+' 2'+!$("#content-phone-inp").val());
+			if(!$("#content-check-code-inp").val()&&!$("#content-phone-inp").val()){
+				$("#content-next-btn").removeClass("content-next-btn01").addClass("content-next-btn02").prop('disabled','disabled');
+			}else{
+				$("#content-next-btn").removeClass("content-next-btn02").addClass("content-next-btn01").prop('disabled','');
+			}
+			updateView();
+		}
+		
+		function init_page(){
+			if(type_status=="1"){
+				$("#content-next-btn").text("下一步")
+				$("#content-check-code-item").css("display","none")
+				$("#content-phone-inp").css("display","block")
+				$("#content-phone-inp").val("");
+				$("#content-check-code-inp").val("");
+				$("#content-phone-inp").on("input",function(e){
+					update_login_view();
+				})
+			}else if(type_status=="2"){
+				$("#content-next-btn").text("登陆")
+				$("#content-check-code-item").css("display","block")
+				$("#content-phone-inp").css("display","none")
+				$("#content-phone-inp").val("");
+				$("#content-check-code-inp").val("");
+				$("#content-check-code-inp").on("input",function(e){
+					update_login_view();
+				})
+				$("#content-send-code-btn").click(function(){
+					if(!is_send_msg){
+						//todo ajax 短信接口请求
+						//$("#content-send-code-btn").text("")
+						var a = 60;
+						setTimeout(function () {
+							console.log(a--)
+							$("#content-send-code-btn").text(a).attr("disabled","true");
+							if (a>=0) {
+								setTimeout(arguments.callee,1000);
+							}else{
+								$("#content-send-code-btn").text("发送验证码").attr("disabled","false");
+								is_send_msg = false;
+							}
+						}, 1000)
+					}else{
+						alert("请勿重复验证码")
+					}
+				})
+			}
+			update_login_view();
+		}
+	</script>
+</html>
