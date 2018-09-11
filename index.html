@@ -13,6 +13,10 @@
 				padding: 1rem;
 				background-origin: border-box;
 				background-repeat: no-repeat;
+				width: 100%;
+				height: auto;
+				max-width: 100%; 
+				display: block;
 			}
 			.radius-item{
 				border: 1px solid #fff;
@@ -69,6 +73,7 @@
 		</div>
 	</body>
 	<script src="js/zepto_v1.2.0.js"></script>
+	<script src="js/app.js"></script>
 	<script>
 		var type_status = "1";
 		var is_send_msg = false;
@@ -91,8 +96,12 @@
 				}).unbind("click").bind('click',function(e){
 					if(type_status=="1"){
 						if($("#content-phone-inp").val()){
-							type_status = "2";
-							init_page()
+							if(isPhoneAvailable($("#content-phone-inp").val())){
+								type_status = "2";
+								init_page()
+							}else{
+								alert("请输入正确的电话号码")
+							}
 						}else{
 							alert("请输入电话号码")
 						}

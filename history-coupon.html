@@ -3,13 +3,12 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>忆奇学同步课优惠券</title>
+	<title>历史优惠券</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 	<meta name="format-detection" content="telephone=no,email=no" />
 	<link rel="stylesheet" href="css/app.css">
-	<link rel="stylesheet" type="text/css" href="css/zepto.alert.css">
 	<style>
 		.content {
 			background: #F5F5F5;
@@ -23,13 +22,26 @@
 			list-style-type:none;
 			position: relative;
 		}
-		.content-list li {
+		.collect-list-item {
 			background-image: url(img/collect_list_item_bg.png);
 			background-repeat: no-repeat;
 			background-size: 100% 100%;
 			height: 10rem;
 			margin: 1.0rem auto;
 			overflow: hidden;
+		}
+		.li-list-footer-item{
+			background: #F5F5F5;
+			height: 10rem;
+			position: relative;
+		}
+		.li-list-footer-item a{
+			position: absolute;
+			margin: 0 auto;
+			width: 100%;
+			bottom: 0px;
+			display: block;
+			color: #757575;
 		}
 		.grey_font{
 			color: #757575;
@@ -47,16 +59,12 @@
 			position:absolute;
 			left:0;
 			top:0;
+			display: none;
 		}
 		.radius-item{
 			border: 1px solid #fff;
 			padding: 15px 0;
 			border-radius: 2rem;
-		}
-		.radius-item02{
-			border: 1px solid #fff;
-			padding: 15px 0;
-			border-radius: 0.5rem;
 		}
 		.collection-list-item-header-item{
 			display: inline-block;
@@ -105,8 +113,8 @@
 		.list-item-middle-center{
 			line-height: 6.67rem;
 		}
-		span{
-			color: #24C791;
+		.bottom-rem span{
+			color: #95DEC2;
 		}
 		.bottom-rem{
 			margin: 0 auto;
@@ -128,7 +136,61 @@
 			padding: 0px;
 			margin: 0px;
 			position: fixed;
-			bottom: 0px;
+			bottom: 0;
+		}
+		.bottom-tab-item{
+			border: 0px solid #fff;
+			height: 100%;
+			width: 50%;
+			float: left;
+			color: white;
+		}
+		.bottom-tab-item02{
+			border: 0px solid #fff;
+			height: 100%;
+			width: 50%;
+			background: #24C791;
+			float: left;
+			color: white;
+		}
+		.user-info-menu{
+			border-top: 1px solid #F5F5F5;
+			background: white;
+			padding: 10px;
+			height: 5rem;
+		}
+		.user-info-menu-common{
+			display: inline-block;
+			vertical-align: top;
+		}
+		.user-info-menu-head{
+			width: 5rem;
+			background-repeat: no-repeat;
+			height: 5rem;
+		}
+		.user-info-menu-info{
+			width: 70%;
+			height: 100%;
+			text-align: left;
+		}
+		.user-info-menu-info-common{
+			height: 50%;
+			position: relative;
+			left: 1rem;
+		}
+		.user-info-menu-info-top{
+		}
+		.user-info-menu-info-bottom{
+		}
+		.user-info-menu-info-item-top{
+			position: absolute;
+			bottom: 5px;
+			font-size: 1.2rem;
+		}
+		.user-info-menu-info-item-bottom{
+			margin-top: 5px;
+			font-size: 1rem;
+			color: #24C791;
 		}
 		
 	</style>
@@ -136,9 +198,16 @@
 
 <body>
 	<header class="header">
-		<div class="header-title">忆奇学同步课优惠券</div>
+		<div class="header-title">历史优惠券</div>
 	</header>
 	<div class="content">
+		<div class="user-info-menu">
+			<img class="user-info-menu-head user-info-menu-common" src="img/ic_icon.png"></img>
+			<div class="user-info-menu-info user-info-menu-common">
+				<div class="user-info-menu-info-top user-info-menu-info-common"><p class="user-info-menu-info-item-top">张金秀</p></div>
+				<div class="user-info-menu-info-bottom user-info-menu-info-common"><p class="user-info-menu-info-item-bottom">有效优惠券2张</p></div>
+			</div>
+		</div>
 		<ul class="content-list">
 			<li class="collect-list-item">
 				<div class="collect-list-item-header">
@@ -154,13 +223,13 @@
 							<div class="list-item-header-item-top"><p class="bottom-rem">小学语文优惠券</p></div>
 							<div class="list-item-header-item-bottom grey_font ">2018-07-31到期</div>
 					</div><div class="collection-list-item-header-item list-item-middle-center" id="colloection-list-item-header-item03">
-						<button class="list-item-get-btn01 radius-item">领取</button>
+						<button class="list-item-get-btn02 radius-item">已转发</button>
 					</div>
 				</div>
 				<div class="collect-list-item-footer grey_font">仅供魔法记忆小学语文同步课程使用，一次只能使用一张优惠券</div>
 				<img src="img/collect_coupon_item_new_flag.png" class="collect-list-item-new-flag"/>
 			</li>
-			<li>
+			<li class="collect-list-item">
 				<div class="collect-list-item-header">
 					<div class="collection-list-item-header-item">
 						<div class="list-item-header-item-top" >
@@ -174,12 +243,12 @@
 							<div class="list-item-header-item-top"><p class="bottom-rem">小学语文优惠券</p></div>
 							<div class="list-item-header-item-bottom grey_font ">2018-07-31到期</div>
 					</div><div class="collection-list-item-header-item list-item-middle-center" id="colloection-list-item-header-item03">
-						<button class="list-item-get-btn01 radius-item" id="list-item-get-btn">领取</button>
+						<button class="list-item-get-btn02 radius-item">已转发</button>
 					</div>
 				</div>
 				<div class="collect-list-item-footer grey_font">仅供魔法记忆小学语文同步课程使用，一次只能使用一张优惠券</div>
 				<img src="img/collect_coupon_item_new_flag.png" class="collect-list-item-new-flag"/></li>
-			<li>
+			<li class="collect-list-item">
 				<div class="collect-list-item-header">
 					<div class="collection-list-item-header-item">
 						<div class="list-item-header-item-top" >
@@ -193,12 +262,12 @@
 							<div class="list-item-header-item-top"><p class="bottom-rem">小学语文优惠券</p></div>
 							<div class="list-item-header-item-bottom grey_font ">2018-07-31到期</div>
 					</div><div class="collection-list-item-header-item list-item-middle-center" id="colloection-list-item-header-item03">
-						<button class="list-item-get-btn01 radius-item" id="list-item-get-btn">领取</button>
+						<button class="list-item-get-btn02 radius-item">已转发</button>
 					</div>
 				</div>
 				<div class="collect-list-item-footer grey_font">仅供魔法记忆小学语文同步课程使用，一次只能使用一张优惠券</div>
 				<img src="img/collect_coupon_item_new_flag.png" class="collect-list-item-new-flag"/></li>
-			<li>
+			<li class="collect-list-item">
 				<div class="collect-list-item-header">
 					<div class="collection-list-item-header-item">
 						<div class="list-item-header-item-top" >
@@ -212,12 +281,12 @@
 							<div class="list-item-header-item-top"><p class="bottom-rem">小学语文优惠券</p></div>
 							<div class="list-item-header-item-bottom grey_font ">2018-07-31到期</div>
 					</div><div class="collection-list-item-header-item list-item-middle-center" id="colloection-list-item-header-item03">
-						<button class="list-item-get-btn01 radius-item" id="list-item-get-btn">领取</button>
+						<button class="list-item-get-btn02 radius-item">已转发</button>
 					</div>
 				</div>
 				<div class="collect-list-item-footer grey_font">仅供魔法记忆小学语文同步课程使用，一次只能使用一张优惠券</div>
 				<img src="img/collect_coupon_item_new_flag.png" class="collect-list-item-new-flag"/></li>
-			<li>
+			<li class="collect-list-item">
 				<div class="collect-list-item-header">
 					<div class="collection-list-item-header-item">
 						<div class="list-item-header-item-top" >
@@ -231,33 +300,25 @@
 							<div class="list-item-header-item-top"><p class="bottom-rem">小学语文优惠券</p></div>
 							<div class="list-item-header-item-bottom grey_font ">2018-07-31到期</div>
 					</div><div class="collection-list-item-header-item list-item-middle-center" id="colloection-list-item-header-item03">
-						<button class="list-item-get-btn01 radius-item" id="list-item-get-btn">领取</button>
+						<button class="list-item-get-btn02 radius-item">已转发</button>
 					</div>
 				</div>
 				<div class="collect-list-item-footer grey_font">仅供魔法记忆小学语文同步课程使用，一次只能使用一张优惠券</div>
-				<img src="img/collect_coupon_item_new_flag.png" class="collect-list-item-new-flag"/></li>
+				<img src="img/collect_coupon_item_new_flag.png" class="collect-list-item-new-flag"/>
+			</li>
 		</ul>
 		<div class="bottom-tab">
-			<button class="bottom-tab-item02 tab-item" id="tab-item-get-coupon">领取优惠券</button>
-			<button class="bottom-tab-item tab-item" id="tab-item-my-coupon">我的优惠券</button>
+			<button class="bottom-tab-item" id="tab-item-get-coupon">领取优惠券</button>
+			<button class="bottom-tab-item02 " id="tab-item-my-coupon">我的优惠券</button>
 		</div>
 	</div>
 </body>
-<script src="js/zepto_v1.2.0.js"></script>
+<script type="text/javascript" src="js/zepto_v1.2.0.js"></script>
 <script type="text/javascript" src="js/zepto.alert.js"></script>
 <script type="text/javascript" src="js/app.js"></script>
 <script>
 	Zepto(function($){
-		$('.collection-list-item-header-item button').click(function(e){
-			console.log(e)
-			console.log("index"+$(this).parents("li").index())
-			$.dialog({
-					ok: function(){
-						window.location.href = "my-coupon.html";
-					},
-					customTemplates: custom_tempates_ok
-                });
-		});
+		
 	})
 </script>
 

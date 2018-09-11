@@ -9,6 +9,10 @@ body {
 	height: 100%;
 }
 
+button {
+	outline: none;
+}
+
 header {
 	text-align: center;
 	line-height: 3rem;
@@ -21,6 +25,7 @@ header {
 	text-align: center;
 	outline: none;
 	color: #FFFFFF;
+	width: 100%;
 }
 
 .content-next-btn02 {
@@ -28,4 +33,22 @@ header {
 	outline: none;
 	text-align: center;
 	color: #FFFFFF;
+	width: 100%
+}
+
+.bottom-tab-item {
+	border: 0px solid #fff;
+	height: 100%;
+	width: 50%;
+	float: left;
+	color: white;
+}
+
+.bottom-tab-item02 {
+	border: 0px solid #fff;
+	height: 100%;
+	width: 50%;
+	background: #24C791;
+	float: left;
+	color: white;
 }
