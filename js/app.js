@@ -19,6 +19,14 @@ function isPhoneAvailable(str) {
 	}
 }
 
+(function ($) {
+	check_login_time()
+  $.getUrlParam = function (name) {
+   var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+   var r = window.location.search.substr(1).match(reg);
+   if (r != null) return r[2]; return null;
+  }
+ })(window.Zepto);
 Zepto(function ($) {
 	$('.bottom-tab button').click(function (e) {
 		var select_obj = $(this)
@@ -40,12 +48,36 @@ Zepto(function ($) {
 			}
 		}) */
 	});
-})
+});
 
-;(function ($) {
-  $.getUrlParam = function (name) {
-   var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-   var r = window.location.search.substr(1).match(reg);
-   if (r != null) return r[2]; return null;
-  }
- })(window.Zepto);
+Date.prototype.Format = function (fmt) { //author: meizz   
+ var o = {  
+ 	"M+": this.getMonth() + 1, //月份   
+ 	"d+": this.getDate(), //日   
+ 	"H+": this.getHours(), //小时   
+ 	"m+": this.getMinutes(), //分   
+ 	"s+": this.getSeconds(), //秒   
+ 	"q+": Math.floor((this.getMonth() + 3) / 3), //季度   
+ 	"S": this.getMilliseconds() //毫秒   
+ };  
+ if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));  
+ for (var k in o)  
+ if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));  
+ return fmt;  
+ }
+
+function check_login_time(){
+	var login_time = window.localStorage.getItem("login_time")
+	var login_type = window.localStorage.getItem("login_type",false)
+	var now_time = (new Date()).valueOf();
+	if(now_time-login_time>900000||!login_type){
+		window.localStorage.setItem("login_type",false)
+		if(window.location.toString().indexOf('index.html')==-1){
+			window.location.href = 'index.html';
+		}
+	}else{
+		if(window.location.toString().indexOf("index.html")!=-1){
+			window.location.href = 'collect-coupon.html';
+		}
+	}
+}

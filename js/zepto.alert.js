@@ -33,8 +33,7 @@
          * 创建
          */
         create : function() {
-
-            var divHeader = (this.settings.title==null)?'':'<div class="rDialog-header-'+ this.settings.title +'"></div>';
+            var divHeader = (this.settings.title==null||this.settings.title=="")?'':'<div class="rDialog-header-'+ this.settings.title +'"></div>';
             // HTML模板
             var templates = (this.settings.customTemplates!=null&&this.settings.customTemplates!="")?this.settings.customTemplates:'<div class="rDialog-wrap">' +
                                 divHeader +
@@ -190,7 +189,7 @@
         content: '加载中...',
         
         // 标题
-        title: 'load',
+        title: '',
         
         // 宽度
         width: 'auto',

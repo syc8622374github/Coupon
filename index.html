@@ -8,6 +8,7 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<meta name="format-detection" content="telephone=no,email=no"/>
 		<link rel="stylesheet" href="css/app.css">
+		<link rel="stylesheet" href="css/zepto.alert.css" />
 		<style>
 			.content-bg-icon{
 				padding: 1rem;
@@ -41,9 +42,8 @@
 				outline: none;
 				text-align: center;
 				background: #F5F5F5;
-				width: 13rem;
 				border: 1px solid #D2D2D2;
-				padding: 1.1rem 0;
+				margin-top: 1rem;
 			}
 			.check-code-btn01{
 				outline: none;
@@ -54,6 +54,7 @@
 				color: #24C791;
 			}
 			.content-check-code-item01{
+				display: none;
 				text-align: center;
 			}
 		</style>
@@ -63,19 +64,17 @@
 			<div class="header-title">忆奇学同步课优惠券</div>
 		</header>
 		<div class="content">
-			<img class="content-bg-icon content-item" src="img/bg_img.png"></img>
-			<input class="radius-item content-item content-phone-inp01" type="number" id="content-phone-inp" placeholder="请输入电话号码"/>
-			<div class="content-check-code-item01 content-item" id="content-check-code-item">
-				<input class="radius-item content-check-code-inp01" type="number" id="content-check-code-inp" placeholder="请输入验证码"/>
-				<button class="radius-item check-code-btn01 content-send-code-btn"  id="content-send-code-btn">发送验证码</button>
-			</div>
-			<button class="radius-item content-item content-next-btn01"  id="content-next-btn">下一步</button>
+			<img class="content-bg-icon content-item" src="img/bg_img.png"/>
+			<input class="radius-item content-item content-phone-inp01" type="number" id="content-phone-inp" placeholder="点击输入账号"/>
+			<input class="radius-item content-item content-check-code-inp01" type="text" id="content-check-code-inp" placeholder="点击输入密码"/>
+			<button class="radius-item content-item content-next-btn02"  id="content-next-btn">下一步</button>
 		</div>
 	</body>
 	<script src="js/zepto_v1.2.0.js"></script>
+	<script src="js/zepto.alert.js"></script>
 	<script src="js/app.js"></script>
 	<script>
-		var type_status = "1";
+		var type_status = "2"; //当前页面状态 1.首页 2.验证码登录
 		var is_send_msg = false;
 		Zepto(function($){
 			init_page();
@@ -106,10 +105,20 @@
 							alert("请输入电话号码")
 						}
 					}else if(type_status=="2"){
-						if($("#content-check-code-inp").val()){
-							window.location.href = "collect-coupon.html";
-						}else{
-							alert("请输入验证码")
+						if(!$("#content-phone-inp").val()){
+							$.dialog({content:"请输入账号",time:"1000"});
+						}if(!isPhoneAvailable($("#content-phone-inp").val())){
+							$.dialog({content:"请输入正确的号码",time:"1000"});
+						}else if(!$("#content-check-code-inp").val()){
+							$.dialog({content:"请输入密码",time:"1000"});
+						}else if($("#content-check-code-inp").val()&&$("#content-phone-inp").val()){
+							window.localStorage.setItem("login_type",true)
+							window.localStorage.setItem("login_time",(new Date()).valueOf())
+							var userStr = '{"status":1,"message":"操作成功","data1":{"name":"xxxxxx","loginName":"13xxxxxxxxx"}}';
+							var userJson = $.parseJSON(userStr);
+							window.localStorage.setItem("name",userJson.data1.name)
+							window.localStorage.setItem("login_name",userJson.data1.loginName)
+							window.location.href = "collect-coupon.html"
 						}
 					}
 				})
@@ -120,7 +129,7 @@
 		
 		function update_login_view(){
 			console.log("1"+!$("#content-check-code-inp").val()+' 2'+!$("#content-phone-inp").val());
-			if(!$("#content-check-code-inp").val()&&!$("#content-phone-inp").val()){
+			if(!$("#content-check-code-inp").val()||!$("#content-phone-inp").val()){
 				$("#content-next-btn").removeClass("content-next-btn01").addClass("content-next-btn02").prop('disabled','disabled');
 			}else{
 				$("#content-next-btn").removeClass("content-next-btn02").addClass("content-next-btn01").prop('disabled','');
@@ -141,7 +150,7 @@
 			}else if(type_status=="2"){
 				$("#content-next-btn").text("登陆")
 				$("#content-check-code-item").css("display","block")
-				$("#content-phone-inp").css("display","none")
+				//$("#content-phone-inp").css("display","none")
 				$("#content-phone-inp").val("");
 				$("#content-check-code-inp").val("");
 				$("#content-check-code-inp").on("input",function(e){
@@ -163,7 +172,7 @@
 							}
 						}, 1000)
 					}else{
-						alert("请勿重复验证码")
+						$.dialog({content:"请输入账号"});
 					}
 				})
 			}
