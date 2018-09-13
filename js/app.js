@@ -8,6 +8,7 @@
 
 var custom_tempates_ok =
 	"<div class='custom-dialog'><div><img id='custom-dialog-success-logo' src='img/ic_dialog_success.png'/><div class='custom-dialog-item'><p class='custom-dialog-item-sucess'>领取成功</p><p class='custom-dialog-item-prompt01'>当日还可领取4张优惠券</p><p class='custom-dilaog-item-prompt02'>*每天每个业务员最多只能领取5张优惠券<br>每张优惠券有效期为1个月</p></div><div class='custom-dialog-item rDialog-footer' id='custom-dialog-item-bottom-btn'></div></div></div>";
+var http_base = 'http://111.230.148.84/yqxAdmin';
 
 // 判断是否为手机号
 function isPhoneAvailable(str) {
@@ -63,21 +64,25 @@ Date.prototype.Format = function (fmt) { //author: meizz
  if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));  
  for (var k in o)  
  if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));  
- return fmt;  
+ return fmt;
  }
 
 function check_login_time(){
 	var login_time = window.localStorage.getItem("login_time")
 	var login_type = window.localStorage.getItem("login_type",false)
-	var now_time = (new Date()).valueOf();
+	var now_time = (new Date()).valueOf()
 	if(now_time-login_time>900000||!login_type){
 		window.localStorage.setItem("login_type",false)
+		window.localStorage.setItem("login_time","")
+		window.localStorage.setItem("name","")
+		window.localStorage.setItem("login_name","")
+		window.localStorage.setItem("coupon_num","")
 		if(window.location.toString().indexOf('index.html')==-1){
-			window.location.href = 'index.html';
+			window.location.href = 'index.html'
 		}
 	}else{
 		if(window.location.toString().indexOf("index.html")!=-1){
-			window.location.href = 'collect-coupon.html';
+			window.location.href = 'collect-coupon.html'
 		}
 	}
 }

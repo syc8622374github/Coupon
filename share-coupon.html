@@ -112,8 +112,8 @@
 			<div class="share-card-header">
 				<div class="share-card-header-bat1">
 					<div class="share-card-header-bat11">
-						<p class="share-card-header-bat111">
-							兑换码10C281
+						<p class="share-card-header-bat111" id="coupon">
+							兑换码xxxxx
 						</p>
 					</div>
 					<p class="share-card-header-bat12">
@@ -153,6 +153,19 @@
 		$(".rDialog-mask").click(function(){
 			$(".rDialog-mask").css("display","none")
 		})
+		$("#coupon").text("兑换码"+$.getUrlParam("code"))
+		var subject = $.getUrlParam("subject")
+		var subjectStr = "";
+		if(subject!=""){
+			if(subject=="E"){
+				subjectStr = "英语";
+			}else if(subject == "M"){
+				subjectStr = "数学";
+			}else if(subject == "C"){
+				subjectStr = "语文";
+			}
+		}
+		$(".share-card-footer-item2").text("仅供"+subjectStr+"同步课程使用")
 	})
 	/* var wxData = {
 		"imgUrl": 'http://html5.rockstudio.cn/Demo/weixin/shareDemo/share.jpg',

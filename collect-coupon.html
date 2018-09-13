@@ -148,32 +148,115 @@
 	</div>
 </body>
 <script src="js/zepto_v1.2.0.js"></script>
-<script type="text/javascript" src="js/zepto.alert.js"></script>
-<script type="text/javascript" src="js/app.js"></script>
+<script src="js/zepto.alert.js"></script>
+<script src="js/app.js"></script>
 <script>
+	/* <li class="collect-list-item">
+		<div class="collect-list-item-header">
+			<div class="collection-list-item-header-item">
+				<div class="list-item-header-item-top" >
+					<div class="bottom-rem" style="line-height: 1rem;">
+						<span style="display:inline;font-size:0.8rem;">￥</span>
+						<span style="display:inline;font-size:1.8rem;">100</span>
+					</div>
+				</div>
+				<div class="list-item-header-item-bottom grey_font">满任意金额可用</div>
+			</div><div class="collection-list-item-header-item" id="collection-list-item-header-item02">
+					<div class="list-item-header-item-top"><p class="bottom-rem">小学语文优惠券</p></div>
+			</div><div class="collection-list-item-header-item list-item-middle-center" id="colloection-list-item-header-item03">
+				<button class="list-item-get-btn01 radius-item">领取</button>
+			</div>
+		</div>
+		<div class="collect-list-item-footer grey_font">仅供魔法记忆小学语文同步课程使用，一次只能使用一张优惠券</div>
+		<img src="img/collect_coupon_item_new_flag.png" class="collect-list-item-new-flag"/>
+	</li> */
 	Zepto(function($){
-		var data = '{"id":"xxxxxx","price":100 ,"name":"小学数学优惠卷","endTime":"2018-01-01 00:00:00","gradeType":1,"subject":"E","code":"xxxxxxxx","surplusNum":4}';
+		$.ajax({
+		type: 'POST',
+		url: http_base+'/admin/dis/coupon/list',
+		xhrFields:{withCredentials:true},
+		crossDomain:true,
+		contentType: 'application/json',
+		success: function(result){
+			if(result!=null&&result.status==1){
+				if(result.data.length>0){
+					result.data.forEach(function(item, index, array){
+						var subjectStr = "";
+						if(item.subject!=""){
+							if(item.subject=="E"){
+								subjectStr = "英语";
+							}else if(item.subject == "M"){
+								subjectStr = "数学";
+							}else if(item.subject == "C"){
+								subjectStr = "语文";
+							}
+						}
+						$('.content-list').append('<li class="collect-list-item">'
+					+'<div class="collect-list-item-header">'
+						+'<div class="collection-list-item-header-item">'
+							+'<div class="list-item-header-item-top" >'
+								+'<div class="bottom-rem" style="line-height: 1rem;">'
+									+'<span style="display:inline;font-size:0.8rem;">￥</span>'
+									+'<span style="display:inline;font-size:1.8rem;">'+Math.floor(item.price)+'</span>'
+								+'</div>'
+							+'</div>'
+							+'<div class="list-item-header-item-bottom grey_font">满任意金额可用</div>'
+						+'</div><div class="collection-list-item-header-item" id="collection-list-item-header-item02">'
+								+'<div class="list-item-header-item-top"><p class="bottom-rem">'+item.name+'</p></div>'
+						+'</div><div class="collection-list-item-header-item list-item-middle-center" id="colloection-list-item-header-item03">'
+							+'<button class="list-item-get-btn01 radius-item">领取</button>'
+						+'</div>'
+					+'</div>'
+					+'<div class="collect-list-item-footer grey_font">仅供魔法记忆小学'+subjectStr+'同步课程使用，一次只能使用一张优惠券</div>'
+					+'<img src="img/collect_coupon_item_new_flag.png" class="collect-list-item-new-flag"/>'
+					+'</li>')
+					})
+					$('.collection-list-item-header-item button').click(function(e){
+						console.log(e)
+						console.log("index"+$(this).parents("li").index())
+						var position = $(this).parents("li").index()
+						console.log("data"+$("#content-phone-inp").val(result.data[position]))
+						$.ajax({
+						type: 'POST',
+						url: http_base+'/admin/dis/coupon/receive',
+						contentType: 'application/json',
+						xhrFields:{withCredentials:true},
+						crossDomain:true,
+						data: JSON.stringify({'id':result.data[position].id}),
+						success: function(result1){
+							console.log(result1)
+							var msg = "获取数据失败";
+							if(result1.message!=null){
+								msg = result1.message;
+								$.dialog({
+										ok: function(){
+											
+										},
+										customTemplates: custom_tempates_ok
+								});
+								return;
+							}
+							$.dialog({content:msg,time:"1000"});
+						},
+						error: function(xhr, type){
+							$.dialog({content:'领取失败',time:"1000"});
+						}})
+					});
+				}
+			}else{
+				var msg = "获取数据失败";
+				if(result.message!=null){
+					msg = result.message;
+				}
+				$.dialog({content:msg,time:1000});
+			}
+		},
+		error: function(xhr, type){
+			$.dialog({content:'请求失败',time:"1000"});
+		}})
+		/* var data = '{"id":"xxxxxx","price":100 ,"name":"小学数学优惠卷","endTime":"2018-01-01 00:00:00","gradeType":1,"subject":"E","code":"xxxxxxxx","surplusNum":4}';
 		var result = $.parseJSON('{"status":1,"message":"操作成功","data":['+data+','+data+','+data+','+data+','+data+']}');
 		console.log(result.data.length>0)
-		/* <li class="collect-list-item">
-			<div class="collect-list-item-header">
-				<div class="collection-list-item-header-item">
-					<div class="list-item-header-item-top" >
-						<div class="bottom-rem" style="line-height: 1rem;">
-							<span style="display:inline;font-size:0.8rem;">￥</span>
-							<span style="display:inline;font-size:1.8rem;">100</span>
-						</div>
-					</div>
-					<div class="list-item-header-item-bottom grey_font">满任意金额可用</div>
-				</div><div class="collection-list-item-header-item" id="collection-list-item-header-item02">
-						<div class="list-item-header-item-top"><p class="bottom-rem">小学语文优惠券</p></div>
-				</div><div class="collection-list-item-header-item list-item-middle-center" id="colloection-list-item-header-item03">
-					<button class="list-item-get-btn01 radius-item">领取</button>
-				</div>
-			</div>
-			<div class="collect-list-item-footer grey_font">仅供魔法记忆小学语文同步课程使用，一次只能使用一张优惠券</div>
-			<img src="img/collect_coupon_item_new_flag.png" class="collect-list-item-new-flag"/>
-		</li> */
 		if(result.data.length>0){
 			result.data.forEach(function(item, index, array){
 				$('.content-list').append('<li class="collect-list-item">'
@@ -196,17 +279,7 @@
 			+'<img src="img/collect_coupon_item_new_flag.png" class="collect-list-item-new-flag"/>'
 			+'</li>')
 			})
-		}
-		$('.collection-list-item-header-item button').click(function(e){
-			console.log(e)
-			console.log("index"+$(this).parents("li").index())
-			$.dialog({
-					ok: function(){
-						window.location.href = "my-coupon.html";
-					},
-					customTemplates: custom_tempates_ok
-				});
-		});
+		} */
 	})
 </script>
 

@@ -9,6 +9,7 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 	<meta name="format-detection" content="telephone=no,email=no" />
 	<link rel="stylesheet" href="css/app.css">
+	<link rel="stylesheet" href="css/zepto.alert.css" />
 	<style>
 		.content {
 			background: #F5F5F5;
@@ -205,8 +206,8 @@
 		<div class="user-info-menu">
 			<img class="user-info-menu-head user-info-menu-common" src="img/ic_icon.png"></img>
 			<div class="user-info-menu-info user-info-menu-common">
-				<div class="user-info-menu-info-top user-info-menu-info-common"><p class="user-info-menu-info-item-top" id="user-name">张金秀</p></div>
-				<div class="user-info-menu-info-bottom user-info-menu-info-common"><p class="user-info-menu-info-item-bottom" id="coupon-num">有效优惠券2张</p></div>
+				<div class="user-info-menu-info-top user-info-menu-info-common"><p class="user-info-menu-info-item-top" id="user-name">xxx</p></div>
+				<div class="user-info-menu-info-bottom user-info-menu-info-common"><p class="user-info-menu-info-item-bottom" id="coupon-num">有效优惠券x张</p></div>
 			</div>
 		</div>
 		<ul class="content-list">
@@ -222,9 +223,99 @@
 <script type="text/javascript" src="js/app.js"></script>
 <script>
 	Zepto(function($){
-		var data = '{"id":"xxxxxx","price":100 ,"name":"小学数学优惠卷","endTime":"2018-01-01 00:00:00","gradeType":1,"subject":"E","code":"xxxxxxxx","statusSend":0,"statusUse":0,"status":9}';
+		$.ajax({
+		type: 'POST',
+		url: http_base+'/admin/dis/coupon/list/history',
+		contentType: 'application/json',
+		xhrFields:{withCredentials:true},
+		crossDomain:true,
+		success: function(result){
+			if(result!=null&&result.status==1){
+				if(result.data.length>0){
+					result.data.forEach(function(item, index, array){
+						var subjectStr = "";
+						if(item.subject!=""){
+							if(item.subject=="E"){
+								subjectStr = "英语";
+							}else if(item.subject == "M"){
+								subjectStr = "数学";
+							}else if(item.subject == "C"){
+								subjectStr = "语文";
+							}
+						}
+						var sendStr = "";
+						if(item.subject!=""){
+							if(item.statusSend==1){
+								sendStr = "已发放";
+							}else if(item.statusUse==1){
+								sendStr = "已使用";
+							}else if(item.status==1){
+								sendStr = "已过期";
+							}
+						}
+						$('.content-list').append('<li class="collect-list-item">'
+					+'<div class="collect-list-item-header">'
+						+'<div class="collection-list-item-header-item">'
+							+'<div class="list-item-header-item-top" >'
+								+'<div class="bottom-rem" style="line-height: 1rem;">'
+									+'<span style="display:inline;font-size:0.8rem;">￥</span>'
+									+'<span style="display:inline;font-size:1.8rem;">'+Math.floor(item.price)+'</span>'
+								+'</div>'
+							+'</div>'
+							+'<div class="list-item-header-item-bottom grey_font">满任意金额可用</div>'
+						+'</div><div class="collection-list-item-header-item" id="collection-list-item-header-item02">'
+								+'<div class="list-item-header-item-top"><p class="bottom-rem">'+item.name+'</p></div>'
+								+'<div class="list-item-header-item-bottom grey_font ">2018-07-31到期</div>'
+						+'</div><div class="collection-list-item-header-item list-item-middle-center" id="colloection-list-item-header-item03">'
+							+'<button class="list-item-get-btn02 radius-item">'+sendStr+'</button>'
+						+'</div>'
+					+'</div>'
+					+'<div class="collect-list-item-footer grey_font">仅供魔法记忆小学'+subjectStr+'同步课程使用，一次只能使用一张优惠券</div>'
+					+'<img src="img/collect_coupon_item_new_flag.png" class="collect-list-item-new-flag"/>'
+					+'</li>')
+					})
+				}
+				/* $('.collection-list-item-header-item button').click(function(e){
+					if(item.statusSend==1){
+						window.location.href = "share-coupon.html?title="
+						+$(this).parents("li")
+						.find("#collection-list-item-header-item02")
+						.children(".list-item-header-item-top").text()
+						+"&code="+item.code
+						+"&subject="+item.subject
+						+"&endtime="+item.endTime;
+						$.ajax({
+						type: 'POST',
+						url: http_base+'/admin/dis/coupon/send',
+						contentType: 'application/json',
+						data: JSON.stringify({'id':result.data[position].id}),
+						success: function(result1){
+							console.log(response)
+							var msg = "获取数据失败";
+							if(result1.message!=null){
+								msg = result1.message;
+							}
+							$.dialog({content:msg,time:"1000"});
+						},
+						error: function(xhr, type){
+							$.dialog({content:'请求失败',time:"1000"});
+						}})
+					}
+				}); */
+			}else{
+				var msg = "获取数据失败";
+				if(result.message!=null){
+					msg = result.message;
+				}
+				$.dialog({content:msg,time:'1000'});
+			}
+		},
+		error: function(xhr, type){
+			$.dialog({content:'请求失败',time:"1000"});
+		}})
+		/* var data = '{"id":"xxxxxx","price":100 ,"name":"小学数学优惠卷","endTime":"2018-01-01 00:00:00","gradeType":1,"subject":"E","code":"xxxxxxxx","statusSend":0,"statusUse":0,"status":9}';
 		var result = $.parseJSON('{"status":1,"message":"操作成功","data":['+data+','+data+','+data+','+data+','+data+']}');
-		console.log(result.data.length>0)
+		console.log(result.data.length>0) */
 		/* <li class="collect-list-item">
 				<div class="collect-list-item-header">
 					<div class="collection-list-item-header-item">
@@ -245,36 +336,6 @@
 				<div class="collect-list-item-footer grey_font">仅供魔法记忆小学语文同步课程使用，一次只能使用一张优惠券</div>
 				<img src="img/collect_coupon_item_new_flag.png" class="collect-list-item-new-flag"/>
 			</li> */
-		if(result.data.length>0){
-			result.data.forEach(function(item, index, array){
-				var typeStr = '';
-				if(item.statusSend==1){
-					typeStr = '已转发';
-				}else if(item.status==9){
-					typeStr = '已过期';
-				} 
-				$('.content-list').append('<li class="collect-list-item">'
-			+'<div class="collect-list-item-header">'
-				+'<div class="collection-list-item-header-item">'
-					+'<div class="list-item-header-item-top" >'
-						+'<div class="bottom-rem" style="line-height: 1rem;">'
-							+'<span style="display:inline;font-size:0.8rem;">￥</span>'
-							+'<span style="display:inline;font-size:1.8rem;">'+item.price+'</span>'
-						+'</div>'
-					+'</div>'
-					+'<div class="list-item-header-item-bottom grey_font">满任意金额可用</div>'
-				+'</div><div class="collection-list-item-header-item" id="collection-list-item-header-item02">'
-						+'<div class="list-item-header-item-top"><p class="bottom-rem">'+item.name+'</p></div>'
-						+'<div class="list-item-header-item-bottom grey_font ">'+new Date(item.endTime).Format("yyyy-MM-dd")+'到期</div>'
-				+'</div><div class="collection-list-item-header-item list-item-middle-center" id="colloection-list-item-header-item03">'
-					+'<button class="list-item-get-btn02 radius-item">'+typeStr+'</button>'
-				+'</div>'
-			+'</div>'
-			+'<div class="collect-list-item-footer grey_font">仅供魔法记忆小学语文同步课程使用，一次只能使用一张优惠券</div>'
-			+'<img src="img/collect_coupon_item_new_flag.png" class="collect-list-item-new-flag"/>'
-			+'</li>')
-			})
-		}
 		$('#user-name').text(window.localStorage.getItem('name'));
 		$('#coupon-num').text('有效优惠券'+window.localStorage.getItem('coupon_num')+'张');
 	})

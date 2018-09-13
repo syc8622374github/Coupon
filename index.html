@@ -10,6 +10,9 @@
 		<link rel="stylesheet" href="css/app.css">
 		<link rel="stylesheet" href="css/zepto.alert.css" />
 		<style>
+			body,html{
+				background: #FFFFFF;
+			}
 			.content-bg-icon{
 				padding: 1rem;
 				background-origin: border-box;
@@ -112,13 +115,54 @@
 						}else if(!$("#content-check-code-inp").val()){
 							$.dialog({content:"请输入密码",time:"1000"});
 						}else if($("#content-check-code-inp").val()&&$("#content-phone-inp").val()){
-							window.localStorage.setItem("login_type",true)
-							window.localStorage.setItem("login_time",(new Date()).valueOf())
-							var userStr = '{"status":1,"message":"操作成功","data1":{"name":"xxxxxx","loginName":"13xxxxxxxxx"}}';
-							var userJson = $.parseJSON(userStr);
-							window.localStorage.setItem("name",userJson.data1.name)
-							window.localStorage.setItem("login_name",userJson.data1.loginName)
-							window.location.href = "collect-coupon.html"
+							console.log($("#content-check-code-inp").val()+"-"+$("#content-check-code-inp").val());
+							$.ajax({
+							  type: 'POST',
+							  url: http_base+'/admin/login',
+							  // post payload:
+								xhrFields:{withCredentials:true},
+								crossDomain:true,
+							  data: JSON.stringify({ 'loginName':$("#content-phone-inp").val(),'loginPwd':$("#content-check-code-inp").val() }),
+							  contentType: 'application/json',
+							  success: function(result){
+									console.log(result)
+									if(result!=null&&result.status==1){
+										window.localStorage.setItem("login_type",true)
+										window.localStorage.setItem("login_time",(new Date()).valueOf())
+										//var userStr = '{"status":1,"message":"操作成功","data1":{"name":"xxxxxx","loginName":"13xxxxxxxxx"}}';
+										//var userJson = $.parseJSON(userStr);
+										//window.localStorage.setItem("name",userJson.data1.name);
+										//window.localStorage.setItem("login_name",userJson.data1.loginName);
+										$.ajax({
+											type: 'POST',
+											url: http_base+'/admin/dis/coupon/userinfo',
+											xhrFields:{withCredentials:true},
+											crossDomain:true,
+											contentType: 'application/json',
+											success: function(result1){
+												if(result1!=null&&result1.status==1){
+													window.localStorage.setItem("name",result1.data.name);
+													window.localStorage.setItem("login_name",result1.data.loginName);
+												}
+												console.log(result1)
+												window.location.href = "collect-coupon.html";
+											},
+											error:function(xhr, type){
+												window.location.href = "collect-coupon.html";
+											},
+										})
+									}else{
+										var msg = '获取数据失败';
+										if(result.message!=null){
+											msg = result.message;
+										}
+										$.dialog({content:msg,time:"1000"});
+									}
+							  },
+							  error: function(xhr, type){
+									$.dialog({content:'请求失败',time:"1000"});
+							  }
+							})
 						}
 					}
 				})
