@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>忆奇学同步课优惠券</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=0.9, user-scalable=no">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 	<meta name="format-detection" content="telephone=no,email=no" />
@@ -14,7 +14,6 @@
 		.content {
 			background: #F5F5F5;
 			text-align: center;
-			font-size: 12px;
 		}
 		.content-list{
 			padding: 5px 1.0rem 4rem 1.0rem;
@@ -39,8 +38,9 @@
 		}
 		.collect-list-item-footer{
 			height: 3.33rem;
-			line-height: 3.33rem;
-			padding: 0px 10px 0px 10px;
+			display: table;
+			word-wrap:break-word;
+			margin: 0 auto;
 		}
 		.collect-list-item-new-flag{
 			width: 2.6rem;
@@ -121,16 +121,6 @@
 			top: 0px;
 			width: 100%;
 		}
-		.bottom-tab{
-			width: 100%;
-			height: 3rem;
-			line-height: 1rem;
-			padding: 0px;
-			margin: 0px;
-			position: fixed;
-			bottom: 0px;
-		}
-		
 	</style>
 </head>
 
@@ -178,7 +168,12 @@
 		crossDomain:true,
 		contentType: 'application/json',
 		success: function(result){
-			if(result!=null&&result.status==1){
+			if(result.status==-2){
+				window.localStorage.setItem("login_type",false);
+				check_login_time();
+				return;
+			}
+			if(result.status==1){
 				if(result.data.length>0){
 					result.data.forEach(function(item, index, array){
 						var subjectStr = "";
@@ -189,6 +184,16 @@
 								subjectStr = "数学";
 							}else if(item.subject == "C"){
 								subjectStr = "语文";
+							}
+						}
+						var gradeTypeStr = "";
+						if(item.gradeType!=""){
+							if(item.gradeType=="1"){
+								gradeTypeStr="小学";
+							}else if(item.gradeType="2"){
+								gradeTypeStr="初中";
+							}else if(item.gradeType="3"){
+								gradeTypeStr="高中";
 							}
 						}
 						$('.content-list').append('<li class="collect-list-item">'
@@ -207,7 +212,7 @@
 							+'<button class="list-item-get-btn01 radius-item">领取</button>'
 						+'</div>'
 					+'</div>'
-					+'<div class="collect-list-item-footer grey_font">仅供魔法记忆小学'+subjectStr+'同步课程使用，一次只能使用一张优惠券</div>'
+					+'<div class="collect-list-item-footer grey_font"><div style="display:table-cell;vertical-align: middle;">仅供魔法记忆'+gradeTypeStr+subjectStr+'同步课程使用，一次只能使用一张优惠券</div></div>'
 					+'<img src="img/collect_coupon_item_new_flag.png" class="collect-list-item-new-flag"/>'
 					+'</li>')
 					})
@@ -224,17 +229,26 @@
 						crossDomain:true,
 						data: JSON.stringify({'id':result.data[position].id}),
 						success: function(result1){
+							if(result1.status==-2){
+								window.localStorage.setItem("login_type",false);
+								check_login_time();
+								return;
+							}
 							console.log(result1)
 							var msg = "获取数据失败";
 							if(result1.message!=null){
 								msg = result1.message;
-								$.dialog({
-										ok: function(){
-											
-										},
-										customTemplates: custom_tempates_ok
-								});
-								return;
+								if(result1.status==1){
+									var custom_tempates_ok =
+										"<div class='custom-dialog'><div><img id='custom-dialog-success-logo' src='img/ic_dialog_success.png'/><div class='custom-dialog-item'><p class='custom-dialog-item-sucess'>领取成功</p><p class='custom-dialog-item-prompt01'>当日还可领取"+result1.data.surplusNum+"张优惠券</p><p class='custom-dilaog-item-prompt02'>*每天每个业务员最多只能领取5张优惠券<br>每张优惠券有效期为1个月</p></div><div class='custom-dialog-item rDialog-footer' id='custom-dialog-item-bottom-btn'></div></div></div>";
+									$.dialog({
+											ok: function(){
+												
+											},
+											customTemplates: custom_tempates_ok
+									});
+									return;
+								}
 							}
 							$.dialog({content:msg,time:"1000"});
 						},

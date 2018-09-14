@@ -77,7 +77,7 @@ function check_login_time(){
 		window.localStorage.setItem("name","")
 		window.localStorage.setItem("login_name","")
 		window.localStorage.setItem("coupon_num","")
-		if(window.location.toString().indexOf('index.html')==-1){
+		if(window.location.toString().indexOf('index.html')==-1&&window.location.toString().indexOf('share-coupon.html')==-1){
 			window.location.href = 'index.html'
 		}
 	}else{
